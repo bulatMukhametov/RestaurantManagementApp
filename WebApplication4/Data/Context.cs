@@ -6,7 +6,11 @@ namespace WebApplication4.Data
     public class Context : DbContext
     {
         public DbSet<MenuPosition> MenuPositions { get; set; }
-
+        public DbSet<User> Users { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderPosition> OrderPositions { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductInMenuPosition> ProductInMenuPositions { get; set; }
 
         public Context(DbContextOptions options) : base(options)
         {
@@ -21,6 +25,7 @@ namespace WebApplication4.Data
         {
             modelBuilder.Entity<User>(entity =>
             {
+                entity.ToTable("users");
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.FirstName)
@@ -42,6 +47,7 @@ namespace WebApplication4.Data
 
             modelBuilder.Entity<MenuPosition>(entity =>
             {
+                entity.ToTable("menu_positions");
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Name)
@@ -57,6 +63,7 @@ namespace WebApplication4.Data
 
             modelBuilder.Entity<Order>(entity =>
             {
+                entity.ToTable("orders");
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CreateDate)
@@ -75,6 +82,7 @@ namespace WebApplication4.Data
 
             modelBuilder.Entity<OrderPosition>(entity =>
             {
+                entity.ToTable("order_positions");
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.HasOne(d => d.Order)
@@ -90,6 +98,7 @@ namespace WebApplication4.Data
 
             modelBuilder.Entity<Product>(entity =>
             {
+                entity.ToTable("products");
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Name)
@@ -105,6 +114,7 @@ namespace WebApplication4.Data
 
             modelBuilder.Entity<ProductInMenuPosition>(entity =>
             {
+                entity.ToTable("product_in_menu_positions");
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.HasOne(d => d.Product)

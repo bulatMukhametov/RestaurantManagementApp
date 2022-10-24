@@ -1,39 +1,41 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using WebApplication4.Dto;
 using WebApplication4.Services.Interfaces;
-
 
 namespace WebApplication4.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MenuController : ControllerBase
+    public class ProductController : ControllerBase
     {
-        private readonly IMenuService _menuService;
+        private readonly IProductService _productService;
 
-        public MenuController(IMenuService menuService)
+        public ProductController(IProductService productService)
         {
-            _menuService = menuService;
+            _productService = productService;
         }
 
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<ProductDto>> GetAll()
         {
-            return new string[] { "value1", "value2" };
+            return await _productService.GetAllAsync();
         }
 
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ProductDto> Get(int id)
         {
-            return "value";
+            return await _productService.GetAsync(id);
         }
 
         // POST api/<ValuesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<bool> Post([FromBody] ProductDto product)
         {
+            return await _productService.AddProductAsync(product);
         }
 
         // PUT api/<ValuesController>/5

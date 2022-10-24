@@ -14,7 +14,7 @@ namespace WebApplication4.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<MenuPosition>> GetActualMenu(CancellationToken token = default)
+        public async Task<IEnumerable<MenuPosition>> GetActualMenuAsync(CancellationToken token = default)
         {
             return await _context.MenuPositions
                 .Where(x=> x.IsActive)
