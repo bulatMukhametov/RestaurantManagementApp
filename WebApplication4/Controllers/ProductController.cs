@@ -35,7 +35,7 @@ namespace WebApplication4.Controllers
         [HttpPost]
         public async Task<bool> Post([FromBody] ProductDto product)
         {
-            return await _productService.AddProductAsync(product);
+            return await _productService.СreateProductAsync(product);
         }
 
         // PUT api/<ValuesController>/5

@@ -11,8 +11,8 @@ using WebApplication4.Data;
 namespace WebApplication4.Migrations
 {
     [DbContext(typeof(RestaurantContext))]
-    [Migration("20221024185329_tables")]
-    partial class tables
+    [Migration("20221025175714_table_roles")]
+    partial class table_roles
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -177,6 +177,24 @@ namespace WebApplication4.Migrations
                     b.ToTable("product_in_menu_positions", (string)null);
                 });
 
+            modelBuilder.Entity("WebApplication4.Data.Domain.Role", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("roles", (string)null);
+                });
+
             modelBuilder.Entity("WebApplication4.Data.Domain.User", b =>
                 {
                     b.Property<long>("Id")
@@ -205,11 +223,17 @@ namespace WebApplication4.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("password");
 
+                    b.Property<long>("RoleId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<long>("Surname")
+                        .HasMaxLength(2000)
                         .HasColumnType("INTEGER")
                         .HasColumnName("surname");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("users", (string)null);
                 });
@@ -293,6 +317,17 @@ namespace WebApplication4.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("WebApplication4.Data.Domain.User", b =>
+                {
+                    b.HasOne("WebApplication4.Data.Domain.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("WebApplication4.Data.Domain.Customer", b =>
                 {
                     b.Navigation("Orders");
@@ -318,6 +353,11 @@ namespace WebApplication4.Migrations
             modelBuilder.Entity("WebApplication4.Data.Domain.Product", b =>
                 {
                     b.Navigation("ProductInMenuPositions");
+                });
+
+            modelBuilder.Entity("WebApplication4.Data.Domain.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

@@ -7,9 +7,9 @@ namespace WebApplication4.Services
 {
     public class MenuService: IMenuService
     {
-        private readonly Context _context;
+        private readonly RestaurantContext _context;
 
-        public MenuService(Context context)
+        public MenuService(RestaurantContext context)
         {
             _context = context;
         }
@@ -21,7 +21,7 @@ namespace WebApplication4.Services
                 .ToListAsync(token);
         }
 
-        public async Task AddAsync(CancellationToken token = default)
+        public async Task CreateMenuPositionAsync(CancellationToken token = default)
         {
             var newMenuPosition = new MenuPosition();
             await _context.AddAsync<MenuPosition>(newMenuPosition, token);

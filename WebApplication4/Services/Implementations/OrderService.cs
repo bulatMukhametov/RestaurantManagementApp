@@ -8,9 +8,9 @@ namespace WebApplication4.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly Context _context;
+        private readonly RestaurantContext _context;
 
-        public OrderService(Context context)
+        public OrderService(RestaurantContext context)
         {
             _context = context;
         }

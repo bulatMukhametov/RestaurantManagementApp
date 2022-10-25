@@ -8,9 +8,9 @@ namespace WebApplication4.Services
 {
     public class ProductService : IProductService
     {
-        private readonly Context _context;
+        private readonly RestaurantContext _context;
 
-        public ProductService(Context context)
+        public ProductService(RestaurantContext context)
         {
             _context = context;
         }
@@ -46,7 +46,7 @@ namespace WebApplication4.Services
             };
         }
 
-        public async Task<bool> AddProductAsync(ProductDto productDto)
+        public async Task<bool> СreateProductAsync(ProductDto productDto)
         {
             var product = new Product
             {

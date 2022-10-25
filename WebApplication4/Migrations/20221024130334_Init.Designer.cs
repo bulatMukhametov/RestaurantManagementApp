@@ -10,7 +10,7 @@ using WebApplication4.Data;
 
 namespace WebApplication4.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(RestaurantContext))]
     [Migration("20221024130334_Init")]
     partial class Init
     {

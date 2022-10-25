@@ -3,7 +3,7 @@ using WebApplication4.Data.Domain;
 
 namespace WebApplication4.Data
 {
-    public class Context : DbContext
+    public class RestaurantContext : DbContext
     {
         public DbSet<MenuPosition> MenuPositions { get; set; }
         public DbSet<User> Users { get; set; }
@@ -12,7 +12,7 @@ namespace WebApplication4.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductInMenuPosition> ProductInMenuPositions { get; set; }
 
-        public Context(DbContextOptions options) : base(options)
+        public RestaurantContext(DbContextOptions options) : base(options)
         {
         }
 
@@ -33,6 +33,7 @@ namespace WebApplication4.Data
                     .HasColumnName("first_name");
 
                 entity.Property(x => x.Surname)
+                    .HasMaxLength(2000)
                     .HasColumnName("surname");
 
                 entity.Property(x => x.Login)
@@ -43,6 +44,11 @@ namespace WebApplication4.Data
 
                 entity.Property(x => x.Password)
                     .HasColumnName("password");
+
+                entity.HasOne(x=> x.Role)
+                    .WithMany(x=> x.Users)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<MenuPosition>(entity =>
@@ -126,6 +132,16 @@ namespace WebApplication4.Data
                     .WithMany(p => p.ProductInMenuPositions)
                     .HasForeignKey(d => d.MenuPositionId)
                     .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.ToTable("roles");
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(2000)
+                    .HasColumnName("name");
             });
 
         }

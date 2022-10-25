@@ -6,6 +6,6 @@ namespace WebApplication4.Services.Interfaces
     {
         public Task<ProductDto[]> GetAllAsync();
         public Task<ProductDto> GetAsync(long id);
-        public Task<bool> AddProductAsync(ProductDto productDto);
+        public Task<bool> СreateProductAsync(ProductDto productDto);
     }
 }

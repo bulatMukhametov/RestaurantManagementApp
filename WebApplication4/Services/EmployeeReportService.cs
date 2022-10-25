@@ -5,9 +5,9 @@ namespace WebApplication4.Services
 {
     public class EmployeeReportService
     {
-        private readonly Context _context;
+        private readonly RestaurantContext _context;
 
-        public EmployeeReportService(Context context)
+        public EmployeeReportService(RestaurantContext context)
         {
             _context = context;
         }
