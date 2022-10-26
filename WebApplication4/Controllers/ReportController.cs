@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApplication4.Controllers
+namespace ReastaurantManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

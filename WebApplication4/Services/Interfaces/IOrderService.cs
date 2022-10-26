@@ -1,10 +1,11 @@
-﻿using WebApplication4.Dto;
+﻿using ReastaurantManagement.Dto;
 
-namespace WebApplication4.Services.Interfaces
+namespace ReastaurantManagement.Services.Interfaces
 {
     public interface IOrderService
     {
+        public Task<OrderDto> GetOrderAsync(long id, CancellationToken token = default);
         public Task<bool> CreateOrderAsync(OrderDto orderDto, CancellationToken token = default);
-        public Task<BillDto> GetBillAsync(long orderId, CancellationToken token = default);
+        public Task<BillDto> PayAsync(long id, CancellationToken token = default);
     }
 }

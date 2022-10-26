@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApplication4.Data;
-using WebApplication4.Dto;
+using ReastaurantManagement.Data;
+using ReastaurantManagement.Dto;
 
-namespace WebApplication4.Services
+namespace ReastaurantManagement.Services
 {
     public class ProductReportService
     {

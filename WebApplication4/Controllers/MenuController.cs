@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication4.Services.Interfaces;
+using ReastaurantManagement.Data.Domain;
+using ReastaurantManagement.Dto;
+using ReastaurantManagement.Services.Interfaces;
 
 
-namespace WebApplication4.Controllers
+namespace ReastaurantManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -17,37 +19,51 @@ namespace WebApplication4.Controllers
             _menuService = menuService;
         }
 
-
-        // GET: api/<ValuesController>
+        /// <summary>
+        /// Get actual menu positions
+        /// </summary>
+        /// <returns>MenuPositionDto[]</returns>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<MenuPositionDto[]> Get()
         {
-            return new string[] { "value1", "value2" };
+            return await _menuService.GetActualMenuPositionsAsync();
         }
 
-        // GET api/<ValuesController>/5
+        /// <summary>
+        /// Get menu position by Id
+        /// </summary>
+        /// <returns>MenuPositionDto</returns>
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<MenuPositionDto> Get(int id)
         {
-            return "value";
+            return await _menuService.GetMenuPositionByIdAsync(id);
         }
 
-        // POST api/<ValuesController>
+        /// <summary>
+        /// Create new menu position
+        /// </summary>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<bool> Post([FromBody] MenuPositionDto dto)
         {
+            return await _menuService.CreateMenuPositionAsync(dto);
         }
 
-        // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        /// <summary>
+        /// Update menu position
+        /// </summary>
+        [HttpPut]
+        public async Task<bool> Put([FromBody] MenuPositionDto dto)
         {
+            return await _menuService.UpdateMenuPositionAsync(dto);
         }
 
-        // DELETE api/<ValuesController>/5
+        /// <summary>
+        /// Delete menu position
+        /// </summary>
         [HttpDelete("{id}")]
-        public void Delete(long id)
+        public async Task<bool> Delete(long id)
         {
+            return await _menuService.DeleteMenuPositionAsync(id);
         }
     }
 }

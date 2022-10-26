@@ -1,6 +1,8 @@
-﻿namespace WebApplication4.Data.Domain
+﻿using ReastaurantManagement.Data.Interfaces;
+
+namespace ReastaurantManagement.Data.Domain
 {
-    public class Customer
+    public class Customer : IEntity
     {
         public long Id { get; set; }
         public long UserId { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace WebApplication4.Data.Interfaces
+﻿namespace ReastaurantManagement.Data.Interfaces
 {
     public interface IHaveCreateDate
     {

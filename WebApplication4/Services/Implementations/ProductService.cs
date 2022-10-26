@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApplication4.Data;
-using WebApplication4.Data.Domain;
-using WebApplication4.Dto;
-using WebApplication4.Services.Interfaces;
+using ReastaurantManagement.Data;
+using ReastaurantManagement.Data.Domain;
+using ReastaurantManagement.Dto;
+using ReastaurantManagement.Services.Interfaces;
 
-namespace WebApplication4.Services
+namespace ReastaurantManagement.Services
 {
     public class ProductService : IProductService
     {

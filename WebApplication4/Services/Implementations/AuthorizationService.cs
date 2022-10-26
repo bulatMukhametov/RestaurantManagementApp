@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using WebApplication4.Data;
-using WebApplication4.Services.Interfaces;
+using ReastaurantManagement.Data;
+using ReastaurantManagement.Services.Interfaces;
 
-namespace WebApplication4.Services.Implementations
+namespace ReastaurantManagement.Services.Implementations
 {
     public class AuthorizationService : IAuthorizationService
     {
@@ -18,15 +18,16 @@ namespace WebApplication4.Services.Implementations
             _dbContext = dbContext;
         }
 
-        public async Task Login(string login, string password)
+        public async Task<bool> LoginAsync(string login, string password, CancellationToken token = default)
         {
+            //TODO Validation, Logging                  
             var user = await _dbContext.Users
                 .Include(u => u.Role)
-                .FirstOrDefaultAsync(x => x.Login == login && x.Password == password);
+                .FirstOrDefaultAsync(x => x.Login == login && x.Password == password, token);
 
             if (user == null)
             {
-
+                throw new Exception("User not found");
             }
 
             var claims = new List<Claim>
@@ -37,11 +38,16 @@ namespace WebApplication4.Services.Implementations
             var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             await _httpContext.HttpContext.SignInAsync(claimsPrincipal);
+
+            return true;
         }
 
-        public async Task Logout()
+        public async Task<bool> LogoutAsync(CancellationToken token = default)
         {
+            //TODO Validation, Logging    
             await _httpContext.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return true;
         }
     }
 }

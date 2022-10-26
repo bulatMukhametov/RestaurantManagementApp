@@ -1,23 +1,46 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApplication4.Data;
-using WebApplication4.Data.Domain;
-using WebApplication4.Dto;
-using WebApplication4.Services.Interfaces;
+using ReastaurantManagement.Data;
+using ReastaurantManagement.Data.Domain;
+using ReastaurantManagement.Dto;
+using ReastaurantManagement.Services.Interfaces;
 
-namespace WebApplication4.Services
+namespace ReastaurantManagement.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly RestaurantContext _context;
+        private readonly RestaurantContext _dbContext;
 
         public OrderService(RestaurantContext context)
         {
-            _context = context;
+            _dbContext = context;
+        }
+
+        public async Task<OrderDto> GetOrderAsync(long id, CancellationToken token = default)
+        {
+            var order = await _dbContext.Orders
+                .Include(x => x.OrderPositions)
+                .FirstOrDefaultAsync(x => x.Id == id, token);
+
+            if (order == null)
+            {
+                throw new Exception("Order not found");
+            }
+
+            return new OrderDto
+            {
+                Id = order.Id,
+                CreateDate = order.CreateDate,
+                CustomerId = order.CustomerId,
+                EmployeeId = order.EmployeeId,
+                MenuPositionIds = order.OrderPositions.Select(x => x.MenuPositionId).ToArray()
+            };
         }
 
         public async Task<bool> CreateOrderAsync(OrderDto orderDto, CancellationToken token = default)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync(token);
+            //TODO Model validating
+            
+            using var transaction = await _dbContext.Database.BeginTransactionAsync(token);
             
             try
             {
@@ -28,8 +51,8 @@ namespace WebApplication4.Services
                     EmployeeId = orderDto.EmployeeId,
                 };
 
-                await _context.AddAsync(newOrder, token);
-                await _context.SaveChangesAsync(token);
+                await _dbContext.AddAsync(newOrder, token);
+                await _dbContext.SaveChangesAsync(token);
 
                 foreach (var menuPositionId in orderDto.MenuPositionIds)
                 {
@@ -38,14 +61,15 @@ namespace WebApplication4.Services
                         MenuPositionId = menuPositionId,
                         OrderId = newOrder.Id
                     };
-                    await _context.AddAsync(newOrderPosition, token);
+                    await _dbContext.AddAsync(newOrderPosition, token);
                 }
 
-                await _context.SaveChangesAsync(token);
+                await _dbContext.SaveChangesAsync(token);
                 await transaction.CommitAsync(token);
             }
-            catch
+            catch(Exception ex)
             {
+                //TODO Log ex
                 await transaction.RollbackAsync(token);
                 throw;
             }
@@ -53,30 +77,62 @@ namespace WebApplication4.Services
             return true;
         }
 
-        public async Task<BillDto> GetBillAsync(long orderId, CancellationToken token = default)
+        public async Task<BillDto> PayAsync(long id, CancellationToken token = default)
         {
-            var order = await _context.Orders
-                .Include(x=> x.OrderPositions)
-                .ThenInclude(x=> x.MenuPosition)
-                .FirstOrDefaultAsync(x=> x.Id == orderId, token);
+            var order = await _dbContext.Orders
+                .Include(x => x.OrderPositions)
+                .ThenInclude(x => x.MenuPosition)
+                .FirstOrDefaultAsync(x => x.Id == id, token);
 
             if (order == null)
             {
                 throw new Exception("Order not found");
             }
 
-            var bill = new BillDto
+            using var transaction = await _dbContext.Database.BeginTransactionAsync(token);
+
+            try
             {
-                CreateDate = order.CreateDate,
-                Amount = order.OrderPositions.Sum(x=> x.MenuPosition.Price),
-                Positions = order.OrderPositions
+                order.IsPayed = true;
+                
+                var bill = await CreateBillAsync(order, token);
+                
+                await _dbContext.SaveChangesAsync(token);
+                await transaction.CommitAsync(token);
+
+                var billDto = new BillDto
+                {
+                    CreateDate = bill.CreateDate,
+                    Amount = bill.Amount,
+                    Positions = order.OrderPositions
                     .Select(x => new OrderPositionDto
                     {
                         MenuPositionName = x.MenuPosition.Name,
                         Price = x.MenuPosition.Price
                     })
-                    .ToArray()                
+                    .ToArray()
+                };
+
+                return billDto;
+            }
+            catch (Exception ex)
+            {
+                //TODO Log ex
+                await transaction.RollbackAsync(token);
+                throw;
+            }
+        }
+
+        private async Task<Bill> CreateBillAsync(Order order, CancellationToken token)
+        {
+            var bill = new Bill
+            {
+                CreateDate = DateTime.UtcNow,
+                OrderId = order.Id,
+                Amount = order.OrderPositions.Sum(x => x.MenuPosition.Price),
             };
+
+            await _dbContext.AddAsync(bill, token);
 
             return bill;
         }

@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebApplication4.Data;
+using ReastaurantManagement.Data;
 
 #nullable disable
 
-namespace WebApplication4.Migrations
+namespace ReastaurantManagement.Migrations
 {
     [DbContext(typeof(RestaurantContext))]
     [Migration("20221024130334_Init")]

@@ -1,4 +1,4 @@
-﻿namespace WebApplication4.Dto
+﻿namespace ReastaurantManagement.Dto
 {
     public class EmployeeReportDto
     {

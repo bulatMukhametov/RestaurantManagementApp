@@ -1,6 +1,8 @@
-﻿namespace WebApplication4.Data.Domain
+﻿using ReastaurantManagement.Data.Interfaces;
+
+namespace ReastaurantManagement.Data.Domain
 {
-    public class ProductInMenuPosition
+    public class ProductInMenuPosition : IEntity
     {
         public long Id { get; set; }
         public long ProductId { get; set; }

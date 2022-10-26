@@ -3,11 +3,11 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebApplication4.Data;
+using ReastaurantManagement.Data;
 
 #nullable disable
 
-namespace WebApplication4.Migrations
+namespace ReastaurantManagement.Migrations
 {
     [DbContext(typeof(RestaurantContext))]
     partial class ContextModelSnapshot : ModelSnapshot
@@ -17,7 +17,32 @@ namespace WebApplication4.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.Customer", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Bill", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("amount");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("create_date");
+
+                    b.Property<long>("OrderId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("bills", (string)null);
+                });
+
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Customer", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,7 +58,7 @@ namespace WebApplication4.Migrations
                     b.ToTable("Customer");
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.Employee", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Employee", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -49,7 +74,7 @@ namespace WebApplication4.Migrations
                     b.ToTable("Employee");
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.MenuPosition", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.MenuPosition", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -81,7 +106,7 @@ namespace WebApplication4.Migrations
                     b.ToTable("menu_positions", (string)null);
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.Order", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Order", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -98,6 +123,10 @@ namespace WebApplication4.Migrations
                     b.Property<long>("EmployeeId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsPayed")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("is_payed");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
@@ -107,7 +136,7 @@ namespace WebApplication4.Migrations
                     b.ToTable("orders", (string)null);
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.OrderPosition", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.OrderPosition", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -127,7 +156,7 @@ namespace WebApplication4.Migrations
                     b.ToTable("order_positions", (string)null);
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.Product", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Product", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -153,7 +182,7 @@ namespace WebApplication4.Migrations
                     b.ToTable("products", (string)null);
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.ProductInMenuPosition", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.ProductInMenuPosition", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -175,7 +204,7 @@ namespace WebApplication4.Migrations
                     b.ToTable("product_in_menu_positions", (string)null);
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.Role", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Role", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -193,7 +222,7 @@ namespace WebApplication4.Migrations
                     b.ToTable("roles", (string)null);
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.User", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -236,9 +265,20 @@ namespace WebApplication4.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.Customer", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Bill", b =>
                 {
-                    b.HasOne("WebApplication4.Data.Domain.User", "User")
+                    b.HasOne("ReastaurantManagement.Data.Domain.Order", "Order")
+                        .WithMany("Bills")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Customer", b =>
+                {
+                    b.HasOne("ReastaurantManagement.Data.Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -247,9 +287,9 @@ namespace WebApplication4.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.Employee", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Employee", b =>
                 {
-                    b.HasOne("WebApplication4.Data.Domain.User", "User")
+                    b.HasOne("ReastaurantManagement.Data.Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -258,15 +298,15 @@ namespace WebApplication4.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.Order", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Order", b =>
                 {
-                    b.HasOne("WebApplication4.Data.Domain.Customer", "Customer")
+                    b.HasOne("ReastaurantManagement.Data.Domain.Customer", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("WebApplication4.Data.Domain.Employee", "Employee")
+                    b.HasOne("ReastaurantManagement.Data.Domain.Employee", "Employee")
                         .WithMany("Orders")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -277,15 +317,15 @@ namespace WebApplication4.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.OrderPosition", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.OrderPosition", b =>
                 {
-                    b.HasOne("WebApplication4.Data.Domain.MenuPosition", "MenuPosition")
+                    b.HasOne("ReastaurantManagement.Data.Domain.MenuPosition", "MenuPosition")
                         .WithMany("OrderPositions")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("WebApplication4.Data.Domain.Order", "Order")
+                    b.HasOne("ReastaurantManagement.Data.Domain.Order", "Order")
                         .WithMany("OrderPositions")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -296,15 +336,15 @@ namespace WebApplication4.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.ProductInMenuPosition", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.ProductInMenuPosition", b =>
                 {
-                    b.HasOne("WebApplication4.Data.Domain.MenuPosition", "MenuPosition")
+                    b.HasOne("ReastaurantManagement.Data.Domain.MenuPosition", "MenuPosition")
                         .WithMany("ProductInMenuPositions")
                         .HasForeignKey("MenuPositionId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("WebApplication4.Data.Domain.Product", "Product")
+                    b.HasOne("ReastaurantManagement.Data.Domain.Product", "Product")
                         .WithMany("ProductInMenuPositions")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -315,9 +355,9 @@ namespace WebApplication4.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.User", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.User", b =>
                 {
-                    b.HasOne("WebApplication4.Data.Domain.Role", "Role")
+                    b.HasOne("ReastaurantManagement.Data.Domain.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.SetNull)
@@ -326,34 +366,36 @@ namespace WebApplication4.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.Customer", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Customer", b =>
                 {
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.Employee", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Employee", b =>
                 {
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.MenuPosition", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.MenuPosition", b =>
                 {
                     b.Navigation("OrderPositions");
 
                     b.Navigation("ProductInMenuPositions");
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.Order", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Order", b =>
                 {
+                    b.Navigation("Bills");
+
                     b.Navigation("OrderPositions");
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.Product", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Product", b =>
                 {
                     b.Navigation("ProductInMenuPositions");
                 });
 
-            modelBuilder.Entity("WebApplication4.Data.Domain.Role", b =>
+            modelBuilder.Entity("ReastaurantManagement.Data.Domain.Role", b =>
                 {
                     b.Navigation("Users");
                 });

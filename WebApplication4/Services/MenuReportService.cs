@@ -1,7 +1,7 @@
-﻿using WebApplication4.Data;
-using WebApplication4.Dto;
+﻿using ReastaurantManagement.Data;
+using ReastaurantManagement.Dto;
 
-namespace WebApplication4.Services
+namespace ReastaurantManagement.Services
 {
     public class MenuReportService
     {
@@ -12,7 +12,7 @@ namespace WebApplication4.Services
             _context = context;
         }
 
-        public async Task<MenuDto[]> GetReportAsync(DateTime from, DateTime to)
+        public async Task<MenuPositionDto[]> GetReportAsync(DateTime from, DateTime to)
         {
             throw new NotImplementedException();
         }

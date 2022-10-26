@@ -1,8 +1,8 @@
-﻿using WebApplication4.Data.Interfaces;
+﻿using ReastaurantManagement.Data.Interfaces;
 
-namespace WebApplication4.Data.Domain
+namespace ReastaurantManagement.Data.Domain
 {
-    public class MenuPosition: IHaveId
+    public class MenuPosition: IEntity
     {
         public long Id { get; set; }
         public string Name { get; set; }

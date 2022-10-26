@@ -1,8 +1,8 @@
-﻿namespace WebApplication4.Services.Interfaces
+﻿namespace ReastaurantManagement.Services.Interfaces
 {
     public interface IAuthorizationService
     {
-        public Task Login(string login, string password);
-        public Task Logout();
+        public Task<bool> LoginAsync(string login, string password, CancellationToken token = default);
+        public Task<bool> LogoutAsync(CancellationToken token = default);
     }
 }

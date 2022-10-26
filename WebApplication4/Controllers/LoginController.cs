@@ -1,27 +1,42 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication4.Dto;
-using WebApplication4.Services.Interfaces;
+using ReastaurantManagement.Dto;
 
-namespace WebApplication4.Controllers
+namespace ReastaurantManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly IAuthorizationService _autorizationService;
+        private readonly Services.Interfaces.IAuthorizationService _autorizationService;
 
-        public LoginController(IAuthorizationService autorizationService)
+        public LoginController(Services.Interfaces.IAuthorizationService autorizationService)
         {
             _autorizationService = autorizationService;
         }
 
-        // POST api/<ValuesController>
+        /// <summary>
+        /// Login
+        /// </summary>
+        /// <param name="loginDto">Login model</param>
+        /// <returns>Operation status</returns>
         [HttpPost]
-        public async void Post([FromBody] LoginDto dto)
+        public async Task<bool> Post([FromBody] LoginDto loginDto)
         {
-            await _autorizationService.Login(dto.Login, dto.Password);
+            //TODO Logging
+            return await _autorizationService.LoginAsync(loginDto.Login, loginDto.Password);         
+        }
+
+        /// <summary>
+        /// Logout
+        /// </summary>
+        /// <returns>Operation status</returns>
+        [HttpPost("Logout")]
+        [Authorize]
+        public async Task<bool> Logout()
+        {
+            //TODO Logging
+            return await _autorizationService.LogoutAsync();         
         }
     }
 }

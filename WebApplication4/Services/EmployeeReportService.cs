@@ -1,20 +1,16 @@
-﻿using WebApplication4.Data;
-using WebApplication4.Dto;
+﻿using ReastaurantManagement.Data;
+using ReastaurantManagement.Dto;
+using RestaurantManagment.Services.Interfaces;
 
-namespace WebApplication4.Services
+namespace ReastaurantManagement.Services
 {
-    public class EmployeeReportService
+    public class EmployeeReportService: IReportService
     {
         private readonly RestaurantContext _context;
 
         public EmployeeReportService(RestaurantContext context)
         {
             _context = context;
-        }
-
-        public async Task<EmployeeReportDto> GetReportAsync()
-        {
-            throw new NotImplementedException();
         }
     }
 }

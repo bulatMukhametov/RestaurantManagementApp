@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApplication4.Data.Domain;
+using ReastaurantManagement.Data.Domain;
 
-namespace WebApplication4.Data
+namespace ReastaurantManagement.Data
 {
     public class RestaurantContext : DbContext
     {
@@ -14,11 +14,6 @@ namespace WebApplication4.Data
 
         public RestaurantContext(DbContextOptions options) : base(options)
         {
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite($"Filename=RestaurantManagement.db");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -74,6 +69,9 @@ namespace WebApplication4.Data
 
                 entity.Property(e => e.CreateDate)
                     .HasColumnName("create_date");
+
+                entity.Property(e => e.IsPayed)
+                    .HasColumnName("is_payed");
 
                 entity.HasOne(d => d.Employee)
                     .WithMany(p => p.Orders)
@@ -144,6 +142,22 @@ namespace WebApplication4.Data
                     .HasColumnName("name");
             });
 
+            modelBuilder.Entity<Bill>(entity =>
+            {
+                entity.ToTable("bills");
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnName("create_date");
+
+                entity.Property(e => e.Amount)
+                    .HasColumnName("amount");
+
+                entity.HasOne(e => e.Order)
+                    .WithMany(e=> e.Bills)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
         }
     }
 }

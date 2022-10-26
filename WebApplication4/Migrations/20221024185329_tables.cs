@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace WebApplication4.Migrations
+namespace ReastaurantManagement.Migrations
 {
     public partial class tables : Migration
     {

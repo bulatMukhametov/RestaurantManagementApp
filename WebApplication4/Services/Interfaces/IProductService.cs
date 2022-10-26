@@ -1,6 +1,6 @@
-﻿using WebApplication4.Dto;
+﻿using ReastaurantManagement.Dto;
 
-namespace WebApplication4.Services.Interfaces
+namespace ReastaurantManagement.Services.Interfaces
 {
     public interface IProductService
     {
