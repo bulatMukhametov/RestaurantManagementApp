@@ -1,2 +1,1 @@
-Restaurant Management
-Database attached
+Database attached, filename = RestaurantManagement.db
