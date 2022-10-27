@@ -70,7 +70,7 @@ namespace ReastaurantManagement.Services
             catch(Exception ex)
             {
                 //TODO Log ex
-                await transaction.RollbackAsync(token);
+                //await transaction.RollbackAsync(token);
                 throw;
             }
 

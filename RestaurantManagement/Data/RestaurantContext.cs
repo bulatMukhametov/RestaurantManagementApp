@@ -116,7 +116,7 @@ namespace ReastaurantManagement.Data
 
                 entity.HasOne(e => e.MenuPosition)
                     .WithMany(e => e.OrderPositions)
-                    .HasForeignKey(e => e.OrderId)
+                    .HasForeignKey(e => e.MenuPositionId)
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
