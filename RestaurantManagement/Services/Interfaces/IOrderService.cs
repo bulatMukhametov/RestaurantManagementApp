@@ -6,6 +6,6 @@ namespace ReastaurantManagement.Services.Interfaces
     {
         public Task<OrderDto> GetOrderAsync(long id, CancellationToken token = default);
         public Task<bool> CreateOrderAsync(OrderDto orderDto, CancellationToken token = default);
-        public Task<BillDto> PayAsync(long id, CancellationToken token = default);
+        public Task<BillDto> PayForOrderAsync(long id, CancellationToken token = default);
     }
 }

@@ -11,6 +11,8 @@ namespace ReastaurantManagement.Data
         public DbSet<OrderPosition> OrderPositions { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductInMenuPosition> ProductInMenuPositions { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Employee> Employees { get; set; }
 
         public RestaurantContext(DbContextOptions options) : base(options)
         {
@@ -27,23 +29,41 @@ namespace ReastaurantManagement.Data
                     .HasMaxLength(2000)
                     .HasColumnName("first_name");
 
-                entity.Property(x => x.Surname)
+                entity.Property(e => e.Surname)
                     .HasMaxLength(2000)
                     .HasColumnName("surname");
 
-                entity.Property(x => x.Login)
+                entity.Property(e => e.Login)
                     .HasColumnName("login");
 
-                entity.Property(x => x.Email)
+                entity.Property(e => e.Email)
                     .HasColumnName("email");
 
-                entity.Property(x => x.Password)
+                entity.Property(e => e.Password)
                     .HasColumnName("password");
 
-                entity.HasOne(x=> x.Role)
-                    .WithMany(x=> x.Users)
-                    .HasForeignKey(d => d.RoleId)
+                entity.HasOne(e => e.Role)
+                    .WithMany(e => e.Users)
+                    .HasForeignKey(e => e.RoleId)
                     .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            modelBuilder.Entity<Employee>(entity =>
+            {
+                entity.ToTable("employees");
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.HasOne(e => e.User)
+                    .WithOne(e => e.Employee);
+            });
+
+            modelBuilder.Entity<Customer>(entity =>
+            {
+                entity.ToTable("customers");
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.HasOne(e => e.User)
+                    .WithOne(e => e.Customer);
             });
 
             modelBuilder.Entity<MenuPosition>(entity =>
@@ -55,10 +75,10 @@ namespace ReastaurantManagement.Data
                     .HasMaxLength(2000)
                     .HasColumnName("name");
 
-                entity.Property(x=> x.Price)
+                entity.Property(e => e.Price)
                     .HasColumnName("price");
 
-                entity.Property(x=> x.IsActive)
+                entity.Property(e => e.IsActive)
                     .HasColumnName("is_active");
             });
 
@@ -73,14 +93,14 @@ namespace ReastaurantManagement.Data
                 entity.Property(e => e.IsPayed)
                     .HasColumnName("is_payed");
 
-                entity.HasOne(d => d.Employee)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.EmployeeId)
+                entity.HasOne(e => e.Employee)
+                    .WithMany(e => e.Orders)
+                    .HasForeignKey(e => e.EmployeeId)
                     .OnDelete(DeleteBehavior.NoAction);
 
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.CustomerId)
+                entity.HasOne(e => e.Customer)
+                    .WithMany(e => e.Orders)
+                    .HasForeignKey(e => e.CustomerId)
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
@@ -89,14 +109,14 @@ namespace ReastaurantManagement.Data
                 entity.ToTable("order_positions");
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.HasOne(d => d.Order)
-                    .WithMany(p => p.OrderPositions)
-                    .HasForeignKey(d => d.OrderId)
+                entity.HasOne(e => e.Order)
+                    .WithMany(e => e.OrderPositions)
+                    .HasForeignKey(e => e.OrderId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(d => d.MenuPosition)
-                    .WithMany(p => p.OrderPositions)
-                    .HasForeignKey(d => d.OrderId)
+                entity.HasOne(e => e.MenuPosition)
+                    .WithMany(e => e.OrderPositions)
+                    .HasForeignKey(e => e.OrderId)
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
@@ -109,10 +129,10 @@ namespace ReastaurantManagement.Data
                     .HasMaxLength(2000)
                     .HasColumnName("name");
 
-                entity.Property(x => x.Price)
+                entity.Property(e => e.Price)
                     .HasColumnName("price");
 
-                entity.Property(x => x.Count)
+                entity.Property(e => e.Count)
                     .HasColumnName("count");
             });
 
@@ -121,14 +141,14 @@ namespace ReastaurantManagement.Data
                 entity.ToTable("product_in_menu_positions");
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.ProductInMenuPositions)
-                    .HasForeignKey(d => d.ProductId)
+                entity.HasOne(e => e.Product)
+                    .WithMany(e => e.ProductInMenuPositions)
+                    .HasForeignKey(e => e.ProductId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(d => d.MenuPosition)
-                    .WithMany(p => p.ProductInMenuPositions)
-                    .HasForeignKey(d => d.MenuPositionId)
+                entity.HasOne(e => e.MenuPosition)
+                    .WithMany(e => e.ProductInMenuPositions)
+                    .HasForeignKey(e => e.MenuPositionId)
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
@@ -154,8 +174,8 @@ namespace ReastaurantManagement.Data
                     .HasColumnName("amount");
 
                 entity.HasOne(e => e.Order)
-                    .WithMany(e=> e.Bills)
-                    .HasForeignKey(d => d.OrderId)
+                    .WithMany(e => e.Bills)
+                    .HasForeignKey(e => e.OrderId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
         }

@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReastaurantManagement.Dto;
 using ReastaurantManagement.Services.Interfaces;
+using RestaurantManagement.Constants;
 
 namespace ReastaurantManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = ProjectConstants.AdminRoleName)]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -16,34 +19,54 @@ namespace ReastaurantManagement.Controllers
             _productService = productService;
         }
 
+        /// <summary>
+        /// Get all products
+        /// </summary>
+        /// <returns>IEnumerable<ProductDto></returns>
         [HttpGet("GetAll")]
         public async Task<IEnumerable<ProductDto>> GetAll()
         {
-            return await _productService.GetAllAsync();
+            return await _productService.GetAllProductsAsync();
         }
 
+        /// <summary>
+        /// Get product by Id
+        /// </summary>
+        /// <returns>ProductDto</returns>
         [HttpGet("{id}")]
         public async Task<ProductDto> Get(int id)
         {
-            return await _productService.GetAsync(id);
+            return await _productService.GetProductByIdAsync(id);
         }
 
+        /// <summary>
+        /// Add new product
+        /// </summary>
+        /// <returns>MenuPositionDto[]</returns>
         [HttpPost]
         public async Task<bool> Post([FromBody] ProductDto product)
         {
             return await _productService.СreateProductAsync(product);
         }
 
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        /// <summary>
+        /// Update product
+        /// </summary>
+        /// <returns>MenuPositionDto[]</returns>
+        [HttpPut]
+        public async Task<bool> Put([FromBody] ProductDto product)
         {
-            //TODO
+            return await _productService.UpdateProductAsync(product);
         }
 
+        /// <summary>
+        /// Delete product
+        /// </summary>
+        /// <returns>MenuPositionDto[]</returns>
         [HttpDelete("{id}")]
-        public void Delete(long id)
+        public async Task<bool> Delete(long id)
         {
-            //TODO
+            return await _productService.DeleteProductAsync(id);
         }
     }
 }

@@ -77,7 +77,7 @@ namespace ReastaurantManagement.Services
             return true;
         }
 
-        public async Task<BillDto> PayAsync(long id, CancellationToken token = default)
+        public async Task<BillDto> PayForOrderAsync(long id, CancellationToken token = default)
         {
             var order = await _dbContext.Orders
                 .Include(x => x.OrderPositions)

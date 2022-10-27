@@ -4,7 +4,8 @@ using ReastaurantManagement.Data;
 using ReastaurantManagement.Services;
 using ReastaurantManagement.Services.Implementations;
 using ReastaurantManagement.Services.Interfaces;
-
+using RestaurantManagement.Services.Implementations.Report;
+using RestaurantManagment.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,17 +16,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddDbContext<RestaurantContext>(options=> 
+builder.Services.AddDbContext<RestaurantContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("SqliteDatabase"))
 );
-builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<IMenuService, MenuService>();
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 
+RegisterServices(builder);
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options => {
+    .AddCookie(options =>
+    {
         options.LoginPath = "/accessdenied";
         options.AccessDeniedPath = "/accessdenied";
     });
@@ -54,3 +53,15 @@ app.MapGet("/accessdenied", async (HttpContext context) =>
 app.MapControllers();
 
 app.Run();
+
+static void RegisterServices(WebApplicationBuilder builder)
+{
+    builder.Services.AddScoped<IOrderService, OrderService>();
+    builder.Services.AddScoped<IMenuService, MenuService>();
+    builder.Services.AddScoped<IProductService, ProductService>();
+    builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
+    builder.Services.AddScoped<IReportService, ReportService>();
+    builder.Services.AddScoped<ProductReportService>();
+    builder.Services.AddScoped<EmployeeReportService>();
+    builder.Services.AddScoped<MenuReportService>();
+}

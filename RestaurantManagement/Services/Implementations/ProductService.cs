@@ -8,16 +8,16 @@ namespace ReastaurantManagement.Services
 {
     public class ProductService : IProductService
     {
-        private readonly RestaurantContext _context;
+        private readonly RestaurantContext _dbContext;
 
-        public ProductService(RestaurantContext context)
+        public ProductService(RestaurantContext dbContext)
         {
-            _context = context;
+            _dbContext = dbContext;
         }
 
-        public async Task<ProductDto[]> GetAllAsync()
+        public async Task<ProductDto[]> GetAllProductsAsync(CancellationToken token = default)
         {
-            return await _context.Products
+            return await _dbContext.Products
                 .Select(x => new ProductDto
                 {
                     Id = x.Id,
@@ -25,12 +25,13 @@ namespace ReastaurantManagement.Services
                     Count = x.Count,
                     Price = x.Price,
                 })
-                .ToArrayAsync();
+                .ToArrayAsync(token);
         }
 
-        public async Task<ProductDto> GetAsync(long id)
+        public async Task<ProductDto> GetProductByIdAsync(long id, CancellationToken token = default)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
+            var product = await _dbContext.Products
+                .FirstOrDefaultAsync(x => x.Id == id, token);
 
             if (product == null)
             {
@@ -46,7 +47,7 @@ namespace ReastaurantManagement.Services
             };
         }
 
-        public async Task<bool> СreateProductAsync(ProductDto productDto)
+        public async Task<bool> СreateProductAsync(ProductDto productDto, CancellationToken token = default)
         {
             var product = new Product
             {
@@ -55,16 +56,15 @@ namespace ReastaurantManagement.Services
                 Count = productDto.Count,
             };
 
-            await _context.Products.AddAsync(product);
-
-            await _context.SaveChangesAsync();
+            await _dbContext.Products.AddAsync(product, token);
+            await _dbContext.SaveChangesAsync(token);
 
             return true;
         }
 
-        public async Task<bool> UpdateProductAsync(ProductDto productDto)
+        public async Task<bool> UpdateProductAsync(ProductDto productDto, CancellationToken token = default)
         {
-            var product = await _context.Products
+            var product = await _dbContext.Products
                 .FirstOrDefaultAsync(x => x.Id == productDto.Id);
             
             if (product == null)
@@ -75,18 +75,22 @@ namespace ReastaurantManagement.Services
             product.Price = productDto.Price;
             product.Count = productDto.Count;
 
-            await _context.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
             return true;
         }
 
-        public async Task<bool> DeleteProductAsync(long id)
+        public async Task<bool> DeleteProductAsync(long id, CancellationToken token = default)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
+            var product = await _dbContext.FindAsync<Product>(id);
 
-            _context.Products.Remove(product);
+            if (product == null)
+            {
+                throw new Exception("Product not found");
+            }
 
-            await _context.SaveChangesAsync();
+            _dbContext.Products.Remove(product);
+            await _dbContext.SaveChangesAsync(token);
 
             return true;
         }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ReastaurantManagement.Data.Domain;
 using ReastaurantManagement.Dto;
 using ReastaurantManagement.Services.Interfaces;
-
+using RestaurantManagement.Constants;
 
 namespace ReastaurantManagement.Controllers
 {
@@ -43,6 +43,7 @@ namespace ReastaurantManagement.Controllers
         /// Create new menu position
         /// </summary>
         [HttpPost]
+        [Authorize(ProjectConstants.AdminRoleName)]
         public async Task<bool> Post([FromBody] MenuPositionDto dto)
         {
             return await _menuService.CreateMenuPositionAsync(dto);
@@ -52,6 +53,7 @@ namespace ReastaurantManagement.Controllers
         /// Update menu position
         /// </summary>
         [HttpPut]
+        [Authorize(ProjectConstants.AdminRoleName)]
         public async Task<bool> Put([FromBody] MenuPositionDto dto)
         {
             return await _menuService.UpdateMenuPositionAsync(dto);
@@ -61,6 +63,7 @@ namespace ReastaurantManagement.Controllers
         /// Delete menu position
         /// </summary>
         [HttpDelete("{id}")]
+        [Authorize(ProjectConstants.AdminRoleName)]
         public async Task<bool> Delete(long id)
         {
             return await _menuService.DeleteMenuPositionAsync(id);

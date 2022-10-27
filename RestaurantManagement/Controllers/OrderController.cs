@@ -36,7 +36,7 @@ namespace ReastaurantManagement.Controllers
         [HttpGet("Pay")]
         public async Task<BillDto> Pay(long orderId)
         {
-            return await _orderService.PayAsync(orderId);
+            return await _orderService.PayForOrderAsync(orderId);
         }
 
         /// <summary>

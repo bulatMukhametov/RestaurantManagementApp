@@ -8,16 +8,16 @@ namespace ReastaurantManagement.Services
 {
     public class MenuService: IMenuService
     {
-        private readonly RestaurantContext _context;
+        private readonly RestaurantContext _dbContext;
 
-        public MenuService(RestaurantContext context)
+        public MenuService(RestaurantContext dbContext)
         {
-            _context = context;
+            _dbContext = dbContext;
         }
 
         public async Task<MenuPositionDto> GetMenuPositionByIdAsync(long id, CancellationToken token = default)
         {
-            var menuPosition = await _context.MenuPositions
+            var menuPosition = await _dbContext.MenuPositions
                 .FirstOrDefaultAsync(x => x.Id == id, token);
 
             if (menuPosition == null)
@@ -38,7 +38,7 @@ namespace ReastaurantManagement.Services
 
         public async Task<MenuPositionDto[]> GetActualMenuPositionsAsync(CancellationToken token = default)
         {
-            return await _context.MenuPositions
+            return await _dbContext.MenuPositions
                 .Where(x=> x.IsActive)
                 .Select(x => new MenuPositionDto
                 {
@@ -67,15 +67,15 @@ namespace ReastaurantManagement.Services
                 Price = dto.Price
             };
 
-            await _context.AddAsync(menuPosition, token);
-            await _context.SaveChangesAsync(token);
+            await _dbContext.AddAsync(menuPosition, token);
+            await _dbContext.SaveChangesAsync(token);
 
             return true;
         }
 
         public async Task<bool> UpdateMenuPositionAsync(MenuPositionDto dto, CancellationToken token = default)
         {
-            var menuPosition = await _context.MenuPositions.FirstOrDefaultAsync(x => x.Id == dto.Id);
+            var menuPosition = await _dbContext.MenuPositions.FirstOrDefaultAsync(x => x.Id == dto.Id);
 
             if (menuPosition == null)
             {
@@ -89,22 +89,22 @@ namespace ReastaurantManagement.Services
             menuPosition.StartDate = dto.StartDate;
             menuPosition.Price = dto.Price;
 
-            await _context.SaveChangesAsync(token);
+            await _dbContext.SaveChangesAsync(token);
 
             return true;
         }
 
         public async Task<bool> DeleteMenuPositionAsync(long id, CancellationToken token = default)
         {
-            var menuPosition = await _context.FindAsync<MenuPosition>(id);
+            var menuPosition = await _dbContext.FindAsync<MenuPosition>(id);
 
             if (menuPosition == null)
             {
                 throw new Exception("Menu position not found");
             }
 
-            _context.MenuPositions.Remove(menuPosition);
-            await _context.SaveChangesAsync(token);
+            _dbContext.MenuPositions.Remove(menuPosition);
+            await _dbContext.SaveChangesAsync(token);
 
             return true;
         }
